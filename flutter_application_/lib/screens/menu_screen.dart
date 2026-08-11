@@ -235,7 +235,7 @@ class _MenuRow extends StatelessWidget {
                 width: isMobile ? 64 : 82,
                 height: isMobile ? 54 : 64,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   width: isMobile ? 64 : 82,
                   height: isMobile ? 54 : 64,
                   color: Colors.grey.shade200,
@@ -361,7 +361,7 @@ class _ProductTile extends StatelessWidget {
             'assets/images/${producto.imagen}',
             width: double.infinity,
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
+            errorBuilder: (_, _, _) => Container(
               color: const Color(0xFFEAF1F5),
               child: const Center(
                 child: Icon(Icons.set_meal, color: PesqueraStyle.navy),

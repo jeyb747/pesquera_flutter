@@ -61,7 +61,7 @@ class Navbar extends StatelessWidget {
                           width: isMobile ? 50 : 126,
                           height: isMobile ? 50 : 46,
                           fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(
+                          errorBuilder: (_, _, _) => const Icon(
                             Icons.set_meal,
                             color: Colors.white,
                             size: 38,

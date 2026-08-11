@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Image.asset('assets/images/restaurante.png',
                             fit: BoxFit.cover),
-                        Container(color: Colors.black.withOpacity(0.55)),
+                        Container(color: Colors.black.withValues(alpha: 0.55)),
                         const Center(
                           child: Padding(
                             padding: EdgeInsets.all(44),
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         constraints: const BoxConstraints(maxWidth: 430),
                         child: Card(
                           elevation: 14,
-                          shadowColor: Colors.black.withOpacity(0.18),
+                          shadowColor: Colors.black.withValues(alpha: 0.18),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),

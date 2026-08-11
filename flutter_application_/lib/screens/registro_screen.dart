@@ -73,8 +73,8 @@ class _RegistroScreenState extends State<RegistroScreen> {
                   constraints: const BoxConstraints(maxWidth: 540),
                   child: Card(
                     elevation: 14,
-                    shadowColor: Colors.black.withOpacity(0.18),
-                    color: Colors.white.withOpacity(0.96),
+                    shadowColor: Colors.black.withValues(alpha: 0.18),
+                    color: Colors.white.withValues(alpha: 0.96),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(22),
                     ),
@@ -120,7 +120,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
                             ),
                             const SizedBox(height: 15),
                             DropdownButtonFormField<String>(
-                              value: tipoDocumento,
+                              initialValue: tipoDocumento,
                               decoration: _decoration(
                                 'Tipo de documento',
                                 'Selecciona tu tipo de documento',

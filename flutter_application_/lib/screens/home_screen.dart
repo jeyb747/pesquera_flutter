@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   Image.asset('assets/images/fondo.png', fit: BoxFit.cover),
-                  Container(color: Colors.black.withOpacity(0.56)),
+                  Container(color: Colors.black.withValues(alpha: 0.56)),
                   Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 820),

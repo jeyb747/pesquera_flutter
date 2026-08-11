@@ -78,7 +78,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
                               keyboardType: TextInputType.phone),
                           const SizedBox(height: 13),
                           DropdownButtonFormField<String>(
-                            value: pago,
+                            initialValue: pago,
                             decoration: InputDecoration(
                               labelText: 'Metodo de pago',
                               prefixIcon: const Icon(Icons.credit_card),

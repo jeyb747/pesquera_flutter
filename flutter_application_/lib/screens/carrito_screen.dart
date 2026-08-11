@@ -3,7 +3,6 @@ import '../models/carrito.dart';
 import '../widgets/pesquera_scaffold.dart';
 import 'domicilio_screen.dart';
 import 'menu_screen.dart';
-import '../widgets/pesquera_style.dart';
 
 class CarritoScreen extends StatefulWidget {
   const CarritoScreen({super.key});
