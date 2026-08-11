@@ -34,10 +34,7 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The desktop navigation needs roughly 1,100 px once the account and cart
-    // actions are visible.  Switch to the compact menu before those controls
-    // can overflow, rather than allowing a RenderFlex overflow indicator.
-    final isMobile = MediaQuery.sizeOf(context).width < 1180;
+    final isMobile = MediaQuery.sizeOf(context).width < 1340;
 
     return Material(
       color: azul,
@@ -49,99 +46,106 @@ class Navbar extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: isMobile ? 14 : 22),
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1240),
+              constraints: const BoxConstraints(maxWidth: 1320),
               child: Row(
-            children: [
-              InkWell(
-                onTap: onInicio,
-                borderRadius: BorderRadius.circular(40),
-                child: Row(
-                  children: [
-                    Image.asset(
-                        'assets/images/logo_horizontal.png',
-                        width: isMobile ? 130 : 126,
-                        height: isMobile ? 50 : 46,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.set_meal,
-                          color: Colors.white,
-                          size: 38,
+                children: [
+                  InkWell(
+                    onTap: onInicio,
+                    borderRadius: BorderRadius.circular(40),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          isMobile
+                              ? 'assets/images/logo.png'
+                              : 'assets/images/logo_horizontal.png',
+                          width: isMobile ? 50 : 126,
+                          height: isMobile ? 50 : 46,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.set_meal,
+                            color: Colors.white,
+                            size: 38,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'La Pesquera',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isMobile ? 16 : 17,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  if (isMobile)
+                    _MobileMenu(
+                      onInicio: onInicio,
+                      onMenu: onMenu,
+                      onReservas: onReservas,
+                      onDomicilio: onDomicilio,
+                      onContacto: onContacto,
+                      onPerfil: onPerfil,
+                      onLogin: onLogin,
+                      onCerrarSesion: onCerrarSesion,
+                      hasUser:
+                          nombreUsuario != null && nombreUsuario!.isNotEmpty,
+                    )
+                  else ...[
+                    _NavLink(text: 'INICIO', onTap: onInicio),
+                    _NavLink(text: 'MENÚ', onTap: onMenu),
+                    _NavLink(text: 'Reservas', onTap: onReservas),
+                    _NavLink(text: 'Domicilio', onTap: onDomicilio),
+                    _NavLink(text: 'Contacto', onTap: onContacto),
+                    if (nombreUsuario != null && nombreUsuario!.isNotEmpty)
+                      _NavLink(text: 'Mis reservas', onTap: onPerfil),
+                    const SizedBox(width: 12),
+                    if (nombreUsuario != null && nombreUsuario!.isNotEmpty) ...[
+                      Text(
+                        nombreUsuario!,
+                        style: const TextStyle(
+                          color: amarillo,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      OutlinedButton(
+                        onPressed: onCerrarSesion,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white),
+                          shape: const StadiumBorder(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 12,
+                          ),
+                        ),
+                        child: const Text('CERRAR SESIÓN'),
+                      ),
+                    ] else
+                      FilledButton.icon(
+                        onPressed: onLogin,
+                        icon: const Icon(Icons.person_outline, size: 18),
+                        label: const Text('INGRESAR'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: amarillo,
+                          foregroundColor: const Color(0xFF2C3E50),
+                          shape: const StadiumBorder(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     const SizedBox(width: 12),
-                    Text(
-                      'La Pesquera',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 16 : 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
                   ],
-                ),
-              ),
-              const Spacer(),
-              if (isMobile)
-                _MobileMenu(
-                  onInicio: onInicio,
-                  onMenu: onMenu,
-                  onReservas: onReservas,
-                  onDomicilio: onDomicilio,
-                  onContacto: onContacto,
-                  onPerfil: onPerfil,
-                  onLogin: onLogin,
-                  onCerrarSesion: onCerrarSesion,
-                  hasUser: nombreUsuario != null && nombreUsuario!.isNotEmpty,
-                )
-              else ...[
-                _NavLink(text: 'INICIO', onTap: onInicio),
-                _NavLink(text: 'MENÚ', onTap: onMenu),
-                _NavLink(text: 'Reservas', onTap: onReservas),
-                _NavLink(text: 'Domicilio', onTap: onDomicilio),
-                _NavLink(text: 'Contacto', onTap: onContacto),
-                if (nombreUsuario != null && nombreUsuario!.isNotEmpty) _NavLink(text: 'Mis reservas', onTap: onPerfil),
-                const SizedBox(width: 12),
-                if (nombreUsuario != null && nombreUsuario!.isNotEmpty) ...[
-                  Text(
-                    nombreUsuario!,
-                    style: const TextStyle(
-                      color: amarillo,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  _CartButton(
+                    count: cantidadCarrito,
+                    onPressed: onCarrito,
                   ),
-                  const SizedBox(width: 12),
-                  OutlinedButton(
-                    onPressed: onCerrarSesion,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white),
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: const Text('CERRAR SESIÓN'),
-                  ),
-                ] else
-                  FilledButton.icon(
-                    onPressed: onLogin,
-                    icon: const Icon(Icons.person_outline, size: 18),
-                    label: const Text('INGRESAR'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: amarillo,
-                      foregroundColor: const Color(0xFF2C3E50),
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                const SizedBox(width: 12),
-              ],
-              _CartButton(count: cantidadCarrito, onPressed: onCarrito),
-            ],
+                ],
               ),
             ),
           ),
@@ -155,7 +159,10 @@ class _NavLink extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const _NavLink({required this.text, required this.onTap});
+  const _NavLink({
+    required this.text,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +173,10 @@ class _NavLink extends StatelessWidget {
         style: TextButton.styleFrom(foregroundColor: Colors.white70),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -199,7 +209,7 @@ class _MobileMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      tooltip: 'Menu',
+      tooltip: 'Menú',
       icon: const Icon(Icons.menu, color: Colors.white),
       onSelected: (value) {
         switch (value) {
@@ -215,8 +225,12 @@ class _MobileMenu extends StatelessWidget {
           case 'domicilio':
             onDomicilio();
             break;
-          case 'contacto': onContacto(); break;
-          case 'perfil': onPerfil(); break;
+          case 'contacto':
+            onContacto();
+            break;
+          case 'perfil':
+            onPerfil();
+            break;
           case 'login':
             onLogin();
             break;
@@ -227,14 +241,15 @@ class _MobileMenu extends StatelessWidget {
       },
       itemBuilder: (_) => [
         const PopupMenuItem(value: 'inicio', child: Text('Inicio')),
-        const PopupMenuItem(value: 'menu', child: Text('Menu')),
+        const PopupMenuItem(value: 'menu', child: Text('Menú')),
         const PopupMenuItem(value: 'reservas', child: Text('Reservas')),
         const PopupMenuItem(value: 'domicilio', child: Text('Domicilio')),
         const PopupMenuItem(value: 'contacto', child: Text('Contacto')),
-        if (hasUser) const PopupMenuItem(value: 'perfil', child: Text('Mis reservas')),
+        if (hasUser)
+          const PopupMenuItem(value: 'perfil', child: Text('Mis reservas')),
         PopupMenuItem(
           value: hasUser ? 'logout' : 'login',
-          child: Text(hasUser ? 'Cerrar sesion' : 'Login'),
+          child: Text(hasUser ? 'Cerrar sesión' : 'Ingresar'),
         ),
       ],
     );
@@ -245,7 +260,10 @@ class _CartButton extends StatelessWidget {
   final int count;
   final VoidCallback onPressed;
 
-  const _CartButton({required this.count, required this.onPressed});
+  const _CartButton({
+    required this.count,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -260,14 +278,20 @@ class _CartButton extends StatelessWidget {
             backgroundColor: Navbar.amarillo,
             foregroundColor: const Color(0xFF2C3E50),
             shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
           ),
         ),
         Positioned(
           top: -8,
           right: -5,
           child: Container(
-            constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+            constraints: const BoxConstraints(
+              minWidth: 20,
+              minHeight: 20,
+            ),
             padding: const EdgeInsets.symmetric(horizontal: 5),
             decoration: const BoxDecoration(
               color: Colors.red,
