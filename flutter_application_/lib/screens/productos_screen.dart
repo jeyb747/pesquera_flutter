@@ -57,7 +57,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
                   title: Text(producto.nombre),
                   subtitle: Text(producto.descripcion),
                   trailing: Text(
-                    "\$${producto.precioFormateado}",
+                    "\$${producto.precio}",
                   ),
                 ),
               );

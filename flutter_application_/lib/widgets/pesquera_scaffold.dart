@@ -6,9 +6,11 @@ import '../screens/domicilio_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/menu_screen.dart';
-import '../screens/perfil_screen.dart';
 import '../screens/reservas_screen.dart';
+import '../screens/contacto_screen.dart';
+import '../screens/perfil_screen.dart';
 import 'custom_navbar.dart';
+import 'pesquera_style.dart';
 
 class PesqueraScaffold extends StatelessWidget {
   final Widget child;
@@ -27,21 +29,26 @@ class PesqueraScaffold extends StatelessWidget {
           nombreUsuario: SessionService.nombre,
           onInicio: () => _go(context, const HomeScreen()),
           onMenu: () => _go(context, const MenuScreen()),
-          onReservas: () => _go(context, const ReservasScreen()),
-          onDomicilio: () => _go(context, const DomicilioScreen()),
-          onCarrito: () => _go(context, const CarritoScreen()),
+          onReservas: () async {
+            if (await pedirInicioSesion(context)) _go(context, const ReservasScreen());
+          },
+          onDomicilio: () async {
+            if (await pedirInicioSesion(context)) _go(context, const DomicilioScreen());
+          },
+          onContacto: () => _go(context, const ContactoScreen()),
           onPerfil: () => _go(context, const PerfilScreen()),
+          onCarrito: () => _go(context, const CarritoScreen()),
           onLogin: () => _go(context, const LoginScreen()),
           onCerrarSesion: () {
             SessionService.cerrar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sesion cerrada')),
-            );
-            _go(context, const HomeScreen());
+            mostrarNotificacion(context, titulo: 'Sesión cerrada', mensaje: 'Tu sesión se cerró correctamente.').then((_) {
+              if (context.mounted) _go(context, const HomeScreen());
+            });
           },
         ),
       ),
-      body: child,
+      body: WaveBackground(child: child),
+      bottomNavigationBar: const PesqueraFooter(),
     );
   }
 
@@ -52,6 +59,22 @@ class PesqueraScaffold extends StatelessWidget {
   }
 }
 
+Future<bool> pedirInicioSesion(BuildContext context) async {
+  if (SessionService.estaLogueado) return true;
+  await mostrarNotificacion(
+    context,
+    titulo: 'Inicia sesión para continuar',
+    mensaje: 'Debes iniciar sesión para realizar reservas o pedidos.',
+    exito: false,
+  );
+  if (context.mounted) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+  return false;
+}
+
 class PesqueraFooter extends StatelessWidget {
   const PesqueraFooter({super.key});
 
@@ -59,10 +82,10 @@ class PesqueraFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-      color: const Color(0xFF2C3E50),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      color: PesqueraStyle.deepNavy,
       child: const Text(
-        '2026 La Pesquera - Todos los derechos reservados',
+        '© 2026 La Pesquera - Todos los derechos reservados',
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white70, fontSize: 13),
       ),

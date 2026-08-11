@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../widgets/pesquera_scaffold.dart';
+import '../widgets/pesquera_style.dart';
 import 'menu_screen.dart';
 import 'registro_screen.dart';
 
@@ -28,14 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (respuesta['success'] == true) {
+      await mostrarNotificacion(context, titulo: 'Sesión iniciada', mensaje: 'Bienvenido a La Pesquera.');
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const MenuScreen()),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(respuesta['mensaje'].toString())),
-      );
+      mostrarNotificacion(context, titulo: 'No se pudo iniciar sesión', mensaje: respuesta['mensaje'].toString(), exito: false);
     }
   }
 
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.asset('assets/images/fondo-pescado.jpg',
+                        Image.asset('assets/images/restaurante.png',
                             fit: BoxFit.cover),
                         Container(color: Colors.black.withOpacity(0.55)),
                         const Center(
@@ -199,7 +200,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-          const PesqueraFooter(),
         ],
       ),
     );

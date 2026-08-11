@@ -3,6 +3,7 @@ import '../models/carrito.dart';
 import '../widgets/pesquera_scaffold.dart';
 import 'domicilio_screen.dart';
 import 'menu_screen.dart';
+import '../widgets/pesquera_style.dart';
 
 class CarritoScreen extends StatefulWidget {
   const CarritoScreen({super.key});
@@ -20,17 +21,18 @@ class _CarritoScreenState extends State<CarritoScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 900),
-                child: Column(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 560),
+                  child: Column(
                   children: [
                     const Text(
                       'Carrito de Compras',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFF0A3D62),
-                        fontSize: 30,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 27,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -43,10 +45,10 @@ class _CarritoScreenState extends State<CarritoScreen> {
                     Container(width: 72, height: 4, color: const Color(0xFFF1C40F)),
                     const SizedBox(height: 28),
                     Card(
-                      elevation: 12,
-                      shadowColor: Colors.black.withOpacity(0.16),
+                      elevation: 0,
+                      color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(26),
@@ -76,7 +78,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  subtitle: Text('\$${producto.precioFormateado}'),
+                                  subtitle: Text('\$${producto.precio}'),
                                   trailing: IconButton(
                                     onPressed: () {
                                       setState(() => Carrito.eliminar(producto));
@@ -159,7 +161,9 @@ class _CarritoScreenState extends State<CarritoScreen> {
                                 ElevatedButton.icon(
                                   onPressed: Carrito.items.isEmpty
                                       ? null
-                                      : () {
+                                  : () async {
+                                          if (!await pedirInicioSesion(context)) return;
+                                          if (!context.mounted) return;
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
@@ -178,10 +182,10 @@ class _CarritoScreenState extends State<CarritoScreen> {
                       ),
                     ),
                   ],
+                  ),
                 ),
               ),
             ),
-            const PesqueraFooter(),
           ],
         ),
       ),

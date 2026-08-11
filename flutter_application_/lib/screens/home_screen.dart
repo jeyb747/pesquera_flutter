@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../widgets/pesquera_scaffold.dart';
 import 'reservas_screen.dart';
+import 'menu_screen.dart';
+import '../widgets/pesquera_style.dart';
+import '../services/session_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  static const azul = Color(0xFF0A3D62);
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +17,13 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: isMobile ? 430 : 560,
+              height: isMobile ? 430 : 685,
               width: double.infinity,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   Image.asset('assets/images/fondo.png', fit: BoxFit.cover),
-                  Container(color: Colors.black.withOpacity(0.50)),
+                  Container(color: Colors.black.withOpacity(0.56)),
                   Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 820),
@@ -32,12 +33,12 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Bienvenido a La Pesquera',
+                              'BIENVENIDO A LA\nPESQUERA',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: isMobile ? 34 : 52,
-                                fontWeight: FontWeight.w800,
+                                fontSize: isMobile ? 31 : 36,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -46,28 +47,16 @@ class HomeScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: isMobile ? 17 : 22,
+                                fontSize: isMobile ? 13 : 15,
                                 height: 1.35,
                               ),
                             ),
                             const SizedBox(height: 28),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => const ReservasScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Reserva',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              ElevatedButton(onPressed: () async { if (!SessionService.estaLogueado) { await pedirInicioSesion(context); return; } if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ReservasScreen())); }, child: const Text('RESERVA')),
+                              const SizedBox(width: 12),
+                              ElevatedButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MenuScreen())), child: const Text('MENÚ')),
+                            ]),
                           ],
                         ),
                       ),
@@ -76,7 +65,10 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            Container(
+              color: Colors.white,
+              width: double.infinity,
+              child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 62),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 820),
@@ -86,14 +78,14 @@ class HomeScreen extends StatelessWidget {
                       'Sobre Nosotros',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: azul,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
+                        color: PesqueraStyle.ink,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     SizedBox(height: 18),
                     Text(
-                      'En La Pesquera ofrecemos los sabores mas frescos del mar, preparados con recetas tradicionales y un toque moderno. Ven a disfrutar una experiencia unica.',
+                      'En La Pesquera ofrecemos los sabores más frescos del mar, preparados con recetas tradicionales y un toque moderno. Ven a disfrutar una experiencia única.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFF6C757D),
@@ -104,8 +96,8 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              ),
             ),
-            const PesqueraFooter(),
           ],
         ),
       ),

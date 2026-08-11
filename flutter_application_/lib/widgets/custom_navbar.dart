@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'pesquera_style.dart';
 
 class Navbar extends StatelessWidget {
   final VoidCallback onInicio;
   final VoidCallback onMenu;
   final VoidCallback onReservas;
   final VoidCallback onDomicilio;
-  final VoidCallback onCarrito;
+  final VoidCallback onContacto;
   final VoidCallback onPerfil;
+  final VoidCallback onCarrito;
   final VoidCallback onLogin;
   final String? nombreUsuario;
   final int cantidadCarrito;
@@ -18,55 +20,60 @@ class Navbar extends StatelessWidget {
     required this.onMenu,
     required this.onReservas,
     required this.onDomicilio,
-    required this.onCarrito,
+    required this.onContacto,
     required this.onPerfil,
+    required this.onCarrito,
     required this.onLogin,
     this.nombreUsuario,
     this.cantidadCarrito = 0,
     this.onCerrarSesion,
   });
 
-  static const azul = Color(0xFF0A3D62);
-  static const amarillo = Color(0xFFF1C40F);
+  static const azul = PesqueraStyle.navy;
+  static const amarillo = PesqueraStyle.yellow;
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.sizeOf(context).width < 820;
+    // The desktop navigation needs roughly 1,100 px once the account and cart
+    // actions are visible.  Switch to the compact menu before those controls
+    // can overflow, rather than allowing a RenderFlex overflow indicator.
+    final isMobile = MediaQuery.sizeOf(context).width < 1180;
 
     return Material(
-      color: azul.withOpacity(0.96),
+      color: azul,
       elevation: 5,
       child: SafeArea(
         bottom: false,
         child: Container(
-          height: isMobile ? 72 : 88,
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 14 : 34),
-          child: Row(
+          height: isMobile ? 68 : 72,
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 14 : 22),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1240),
+              child: Row(
             children: [
               InkWell(
                 onTap: onInicio,
                 borderRadius: BorderRadius.circular(40),
                 child: Row(
                   children: [
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        width: isMobile ? 52 : 62,
-                        height: isMobile ? 52 : 62,
-                        fit: BoxFit.cover,
+                    Image.asset(
+                        'assets/images/logo_horizontal.png',
+                        width: isMobile ? 130 : 126,
+                        height: isMobile ? 50 : 46,
+                        fit: BoxFit.contain,
                         errorBuilder: (_, __, ___) => const Icon(
                           Icons.set_meal,
                           color: Colors.white,
                           size: 38,
                         ),
                       ),
-                    ),
                     const SizedBox(width: 12),
                     Text(
                       'La Pesquera',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: isMobile ? 18 : 22,
+                        fontSize: isMobile ? 16 : 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -80,24 +87,26 @@ class Navbar extends StatelessWidget {
                   onMenu: onMenu,
                   onReservas: onReservas,
                   onDomicilio: onDomicilio,
+                  onContacto: onContacto,
                   onPerfil: onPerfil,
                   onLogin: onLogin,
                   onCerrarSesion: onCerrarSesion,
                   hasUser: nombreUsuario != null && nombreUsuario!.isNotEmpty,
                 )
               else ...[
-                _NavLink(text: 'Inicio', onTap: onInicio),
-                _NavLink(text: 'Menu', onTap: onMenu),
+                _NavLink(text: 'INICIO', onTap: onInicio),
+                _NavLink(text: 'MENÚ', onTap: onMenu),
                 _NavLink(text: 'Reservas', onTap: onReservas),
                 _NavLink(text: 'Domicilio', onTap: onDomicilio),
+                _NavLink(text: 'Contacto', onTap: onContacto),
+                if (nombreUsuario != null && nombreUsuario!.isNotEmpty) _NavLink(text: 'Mis reservas', onTap: onPerfil),
                 const SizedBox(width: 12),
                 if (nombreUsuario != null && nombreUsuario!.isNotEmpty) ...[
-                  TextButton.icon(
-                    onPressed: onPerfil,
-                    icon: const Icon(Icons.person_outline, size: 18),
-                    label: Text(nombreUsuario!),
-                    style: TextButton.styleFrom(
-                      foregroundColor: amarillo,
+                  Text(
+                    nombreUsuario!,
+                    style: const TextStyle(
+                      color: amarillo,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -112,13 +121,13 @@ class Navbar extends StatelessWidget {
                         vertical: 12,
                       ),
                     ),
-                    child: const Text('Cerrar sesion'),
+                    child: const Text('CERRAR SESIÓN'),
                   ),
                 ] else
                   FilledButton.icon(
                     onPressed: onLogin,
                     icon: const Icon(Icons.person_outline, size: 18),
-                    label: const Text('Login'),
+                    label: const Text('INGRESAR'),
                     style: FilledButton.styleFrom(
                       backgroundColor: amarillo,
                       foregroundColor: const Color(0xFF2C3E50),
@@ -133,6 +142,8 @@ class Navbar extends StatelessWidget {
               ],
               _CartButton(count: cantidadCarrito, onPressed: onCarrito),
             ],
+              ),
+            ),
           ),
         ),
       ),
@@ -149,13 +160,13 @@ class _NavLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 11),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: TextButton(
         onPressed: onTap,
-        style: TextButton.styleFrom(foregroundColor: Colors.white),
+        style: TextButton.styleFrom(foregroundColor: Colors.white70),
         child: Text(
           text,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -167,6 +178,7 @@ class _MobileMenu extends StatelessWidget {
   final VoidCallback onMenu;
   final VoidCallback onReservas;
   final VoidCallback onDomicilio;
+  final VoidCallback onContacto;
   final VoidCallback onPerfil;
   final VoidCallback onLogin;
   final VoidCallback? onCerrarSesion;
@@ -177,6 +189,7 @@ class _MobileMenu extends StatelessWidget {
     required this.onMenu,
     required this.onReservas,
     required this.onDomicilio,
+    required this.onContacto,
     required this.onPerfil,
     required this.onLogin,
     required this.onCerrarSesion,
@@ -202,9 +215,8 @@ class _MobileMenu extends StatelessWidget {
           case 'domicilio':
             onDomicilio();
             break;
-          case 'perfil':
-            onPerfil();
-            break;
+          case 'contacto': onContacto(); break;
+          case 'perfil': onPerfil(); break;
           case 'login':
             onLogin();
             break;
@@ -218,7 +230,8 @@ class _MobileMenu extends StatelessWidget {
         const PopupMenuItem(value: 'menu', child: Text('Menu')),
         const PopupMenuItem(value: 'reservas', child: Text('Reservas')),
         const PopupMenuItem(value: 'domicilio', child: Text('Domicilio')),
-        if (hasUser) const PopupMenuItem(value: 'perfil', child: Text('Mi cuenta')),
+        const PopupMenuItem(value: 'contacto', child: Text('Contacto')),
+        if (hasUser) const PopupMenuItem(value: 'perfil', child: Text('Mis reservas')),
         PopupMenuItem(
           value: hasUser ? 'logout' : 'login',
           child: Text(hasUser ? 'Cerrar sesion' : 'Login'),
@@ -242,12 +255,12 @@ class _CartButton extends StatelessWidget {
         FilledButton.icon(
           onPressed: onPressed,
           icon: const Icon(Icons.shopping_cart_outlined, size: 19),
-          label: const Text('Carrito'),
+          label: const Text('CARRITO'),
           style: FilledButton.styleFrom(
             backgroundColor: Navbar.amarillo,
             foregroundColor: const Color(0xFF2C3E50),
             shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           ),
         ),
         Positioned(

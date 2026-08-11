@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/reserva_service.dart';
 import '../widgets/pesquera_scaffold.dart';
+import '../widgets/pesquera_style.dart';
 
 class ReservasScreen extends StatefulWidget {
   const ReservasScreen({super.key});
@@ -31,20 +32,30 @@ class _ReservasScreenState extends State<ReservasScreen> {
   @override
   Widget build(BuildContext context) {
     return PesqueraScaffold(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 540),
-                  child: _card(),
-                ),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 46,
+                    ),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 420),
+                        child: _card(),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
               ),
             ),
-            const PesqueraFooter(),
-          ],
+          ),
         ),
       ),
     );
@@ -52,11 +63,11 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
   Widget _card() {
     return Card(
-      elevation: 14,
-      shadowColor: Colors.black.withOpacity(0.18),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 0,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.all(36),
         child: Column(
           children: [
             Container(
@@ -77,9 +88,9 @@ class _ReservasScreenState extends State<ReservasScreen> {
               'Reserva tu mesa',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(0xFF0A3D62),
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
+                color: PesqueraStyle.ink,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 7),
@@ -100,7 +111,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
               minHeight: 8,
               borderRadius: BorderRadius.circular(999),
               backgroundColor: Colors.grey.shade200,
-              color: const Color(0xFFF1C40F),
+              color: PesqueraStyle.navy,
             ),
             const SizedBox(height: 28),
             AnimatedSwitcher(
@@ -229,9 +240,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
   Future<void> _guardarReserva() async {
     if (nombre.text.trim().isEmpty || telefono.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa nombre y telefono')),
-      );
+      mostrarNotificacion(context, titulo: 'Datos incompletos', mensaje: 'Completa nombre y telefono.', exito: false);
       return;
     }
 
@@ -249,9 +258,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(respuesta['mensaje'].toString())),
-    );
+    await mostrarNotificacion(context, titulo: respuesta['success'] == true ? 'Reserva realizada' : 'No se pudo reservar', mensaje: respuesta['success'] == true ? 'Tu reserva fue confirmada correctamente.' : respuesta['mensaje'].toString(), exito: respuesta['success'] == true);
 
     if (respuesta['success'] == true) {
       setState(() {

@@ -15,7 +15,7 @@ class Carrito {
     double suma = 0;
 
     for (var producto in items) {
-      suma += producto.precioNumerico;
+      suma += double.tryParse(producto.precio) ?? 0;
     }
 
     return suma;

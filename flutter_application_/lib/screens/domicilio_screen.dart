@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/carrito.dart';
 import '../services/domicilio_service.dart';
 import '../widgets/pesquera_scaffold.dart';
+import '../widgets/pesquera_style.dart';
 
 class DomicilioScreen extends StatefulWidget {
   const DomicilioScreen({super.key});
@@ -28,24 +29,24 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 650),
+                  constraints: const BoxConstraints(maxWidth: 500),
                   child: Card(
-                    elevation: 14,
-                    shadowColor: Colors.black.withOpacity(0.18),
+                    elevation: 0,
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(34),
                       child: Column(
                         children: [
                           const Text(
                             'Confirmar Domicilio',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Color(0xFF0A3D62),
-                              fontSize: 26,
-                              fontWeight: FontWeight.w900,
+                              color: PesqueraStyle.ink,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           const SizedBox(height: 7),
@@ -122,7 +123,6 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
                 ),
               ),
             ),
-            const PesqueraFooter(),
           ],
         ),
       ),
@@ -134,9 +134,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
         direccion.text.trim().isEmpty ||
         telefono.text.trim().isEmpty ||
         pago == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Completa todos los datos del domicilio')),
-      );
+      mostrarNotificacion(context, titulo: 'Datos incompletos', mensaje: 'Completa todos los datos del domicilio.', exito: false);
       return;
     }
 
@@ -154,9 +152,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(respuesta['mensaje'].toString())),
-    );
+    await mostrarNotificacion(context, titulo: respuesta['success'] == true ? 'Pedido realizado' : 'No se pudo confirmar', mensaje: respuesta['success'] == true ? 'Tu pedido fue confirmado correctamente.' : respuesta['mensaje'].toString(), exito: respuesta['success'] == true);
 
     if (respuesta['success'] == true) {
       setState(() {
@@ -215,7 +211,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
               contentPadding: EdgeInsets.zero,
               title: Text(producto.nombre),
               trailing: Text(
-                '\$${producto.precioFormateado}',
+                '\$${producto.precio}',
                 style: const TextStyle(
                   color: Color(0xFF0A3D62),
                   fontWeight: FontWeight.w800,

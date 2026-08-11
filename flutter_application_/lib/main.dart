@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
+import 'widgets/pesquera_style.dart';
 
 void main() {
   runApp(const MiApp());
@@ -13,25 +15,25 @@ class MiApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Arial',
+        textTheme: GoogleFonts.cinzelTextTheme(),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0A3D62),
-          primary: const Color(0xFF0A3D62),
-          secondary: const Color(0xFFF1C40F),
+          seedColor: PesqueraStyle.navy,
+          primary: PesqueraStyle.navy,
+          secondary: PesqueraStyle.yellow,
         ),
-        scaffoldBackgroundColor: const Color(0xFFFDFEFE),
+        scaffoldBackgroundColor: PesqueraStyle.softBlue,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF0A3D62),
+          backgroundColor: PesqueraStyle.navy,
           foregroundColor: Colors.white,
           centerTitle: true,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFF1C40F),
-            foregroundColor: const Color(0xFF2C3E50),
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+            backgroundColor: PesqueraStyle.yellow,
+            foregroundColor: PesqueraStyle.ink,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(6),
             ),
           ),
         ),

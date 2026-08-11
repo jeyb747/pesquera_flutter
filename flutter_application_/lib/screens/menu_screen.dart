@@ -3,6 +3,7 @@ import '../models/carrito.dart';
 import '../models/producto.dart';
 import '../services/producto_service.dart';
 import '../widgets/pesquera_scaffold.dart';
+import '../widgets/pesquera_style.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -45,19 +46,19 @@ class _MenuScreenState extends State<MenuScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1100),
-                    child: Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 34),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1100),
+                      child: Column(
                       children: [
                         const Text(
                           'Nuestro Menu',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFF0A3D62),
-                            fontSize: 36,
-                            fontWeight: FontWeight.w800,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -71,10 +72,10 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                         const SizedBox(height: 30),
                         ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 640),
+                          constraints: const BoxConstraints(maxWidth: 970),
                           child: TextField(
                             decoration: InputDecoration(
-                              hintText: 'Buscar producto...',
+                              hintText: 'Busca un plato, ingrediente o categoría',
                               prefixIcon: const Icon(Icons.search),
                               filled: true,
                               fillColor: Colors.white,
@@ -103,7 +104,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   p.categoria.toLowerCase() ==
                                   'pescados y carnes')
                               .toList(),
-                          onAdd: _add,
+                          onAdd: (producto) { _add(producto); },
                         ),
                         _Category(
                           title: 'Sopas',
@@ -111,7 +112,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               .where(
                                   (p) => p.categoria.toLowerCase() == 'sopas')
                               .toList(),
-                          onAdd: _add,
+                          onAdd: (producto) { _add(producto); },
                         ),
                         _Category(
                           title: 'Porciones',
@@ -119,7 +120,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               .where((p) =>
                                   p.categoria.toLowerCase() == 'porcion')
                               .toList(),
-                          onAdd: _add,
+                          onAdd: (producto) { _add(producto); },
                         ),
                         _Category(
                           title: 'Bebidas',
@@ -127,13 +128,13 @@ class _MenuScreenState extends State<MenuScreen> {
                               .where(
                                   (p) => p.categoria.toLowerCase() == 'bebida')
                               .toList(),
-                          onAdd: _add,
+                          onAdd: (producto) { _add(producto); },
                         ),
                       ],
+                      ),
                     ),
                   ),
                 ),
-                const PesqueraFooter(),
               ],
             ),
           );
@@ -142,11 +143,11 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  void _add(Producto producto) {
+  Future<void> _add(Producto producto) async {
+    if (!await pedirInicioSesion(context)) return;
     Carrito.agregar(producto);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${producto.nombre} agregado al carrito')),
-    );
+    if (!mounted) return;
+    await mostrarNotificacion(context, titulo: 'Producto agregado', mensaje: '${producto.nombre} fue agregado al carrito.');
     setState(() {});
   }
 }
@@ -171,15 +172,7 @@ class _Category extends StatelessWidget {
       margin: const EdgeInsets.only(top: 34),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: Colors.transparent,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,18 +185,24 @@ class _Category extends StatelessWidget {
               ),
             ),
             child: Text(
-              title,
+              '🐟  $title',
               style: const TextStyle(
-                color: Color(0xFF0A3D62),
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
+                color: PesqueraStyle.ink,
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
           const SizedBox(height: 16),
-          ...products.map(
-            (producto) => _MenuRow(producto: producto, onAdd: onAdd),
-          ),
+          LayoutBuilder(builder: (context, constraints) {
+            final columns = constraints.maxWidth >= 900 ? 4 : constraints.maxWidth >= 600 ? 2 : 1;
+            final width = (constraints.maxWidth - (columns - 1) * 18) / columns;
+            return Wrap(
+              spacing: 18,
+              runSpacing: 18,
+              children: products.map((producto) => SizedBox(width: width, child: _ProductTile(producto: producto, onAdd: onAdd))).toList(),
+            );
+          }),
         ],
       ),
     );
@@ -271,7 +270,7 @@ class _MenuRow extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              '\$${producto.precioFormateado}',
+              '\$${producto.precio}',
               style: const TextStyle(
                 color: Color(0xFF0A3D62),
                 fontWeight: FontWeight.w800,
@@ -323,7 +322,7 @@ class _MenuRow extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '\$${producto.precioFormateado}',
+              '\$${producto.precio}',
               style: const TextStyle(
                 color: Color(0xFF0A3D62),
                 fontWeight: FontWeight.w800,
@@ -341,6 +340,43 @@ class _MenuRow extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ProductTile extends StatelessWidget {
+  final Producto producto;
+  final void Function(Producto) onAdd;
+  const _ProductTile({required this.producto, required this.onAdd});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 294,
+      decoration: PesqueraStyle.cardDecoration,
+      clipBehavior: Clip.antiAlias,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(
+          child: Image.asset(
+            'assets/images/${producto.imagen}',
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              color: const Color(0xFFEAF1F5),
+              child: const Center(
+                child: Icon(Icons.set_meal, color: PesqueraStyle.navy),
+              ),
+            ),
+          ),
+        ),
+        Padding(padding: const EdgeInsets.fromLTRB(15, 13, 15, 14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(producto.nombre.toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: PesqueraStyle.ink, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 7),
+          Text(producto.descripcion.isEmpty ? 'Preparación especial de la casa' : producto.descripcion, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.black45, fontSize: 12)),
+          const SizedBox(height: 10),
+          Row(children: [Text('\$${producto.precio}', style: const TextStyle(color: PesqueraStyle.yellow, fontWeight: FontWeight.w800, fontSize: 16)), const Spacer(), InkWell(onTap: () => onAdd(producto), borderRadius: BorderRadius.circular(20), child: const CircleAvatar(radius: 16, backgroundColor: PesqueraStyle.yellow, child: Icon(Icons.add, size: 18, color: PesqueraStyle.ink)))])
+        ]))
+      ]),
     );
   }
 }

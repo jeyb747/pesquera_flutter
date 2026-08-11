@@ -12,11 +12,6 @@ class SessionService {
     return value?.toString();
   }
 
-  static String? get correo {
-    final value = usuario?['correo'] ?? usuario?['email'];
-    return value?.toString();
-  }
-
   static bool get estaLogueado => usuarioId != null;
 
   static void iniciar(Map<String, dynamic> data) {

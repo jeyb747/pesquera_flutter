@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../widgets/pesquera_scaffold.dart';
+import '../widgets/pesquera_style.dart';
 import 'login_screen.dart';
 
 class RegistroScreen extends StatefulWidget {
@@ -37,9 +38,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(respuesta['mensaje'].toString())),
-    );
+    await mostrarNotificacion(context, titulo: respuesta['success'] == true ? 'Cuenta creada' : 'No se pudo crear la cuenta', mensaje: respuesta['success'] == true ? 'Tu cuenta fue creada correctamente.' : respuesta['mensaje'].toString(), exito: respuesta['success'] == true);
 
     if (respuesta['success'] == true) {
       Navigator.pushReplacement(
@@ -270,7 +269,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
                 ),
               ),
               const SizedBox(height: 34),
-              const PesqueraFooter(),
             ],
           ),
         ),
