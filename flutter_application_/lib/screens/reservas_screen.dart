@@ -36,23 +36,13 @@ class _ReservasScreenState extends State<ReservasScreen> {
         builder: (context, constraints) => SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 46,
-                    ),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 420),
-                        child: _card(),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                ],
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 516),
+                  child: _card(),
+                ),
               ),
             ),
           ),
@@ -67,21 +57,13 @@ class _ReservasScreenState extends State<ReservasScreen> {
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: const EdgeInsets.all(36),
+        padding: const EdgeInsets.fromLTRB(48, 26, 48, 34),
         child: Column(
           children: [
-            Container(
-              width: 62,
-              height: 62,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFF4C8),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.explore_outlined,
-                color: Color(0xFF0A3D62),
-                size: 34,
-              ),
+            const Icon(
+              Icons.explore_outlined,
+              color: PesqueraStyle.ink,
+              size: 20,
             ),
             const SizedBox(height: 18),
             const Text(
@@ -89,7 +71,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: PesqueraStyle.ink,
-                fontSize: 24,
+                fontSize: 29,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -99,19 +81,17 @@ class _ReservasScreenState extends State<ReservasScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF2C3E50),
-                fontSize: 12,
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 12),
-            Container(width: 72, height: 4, color: const Color(0xFFF1C40F)),
-            const SizedBox(height: 26),
+            const SizedBox(height: 28),
             LinearProgressIndicator(
               value: step / 4,
-              minHeight: 8,
+              minHeight: 16,
               borderRadius: BorderRadius.circular(999),
               backgroundColor: Colors.grey.shade200,
-              color: PesqueraStyle.navy,
+              color: const Color(0xFF1677FF),
             ),
             const SizedBox(height: 28),
             AnimatedSwitcher(
@@ -133,13 +113,14 @@ class _ReservasScreenState extends State<ReservasScreen> {
     return Column(
       key: const ValueKey(1),
       children: [
-        const _StepTitle('Cuantos comensales asistiran?'),
+        const _StepTitle('¿CUÁNTOS COMENSALES ASISTIRÁN?'),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _CounterButton(
               icon: Icons.remove,
-              onTap: () => setState(() => personas = (personas - 1).clamp(1, 20)),
+              onTap: () =>
+                  setState(() => personas = (personas - 1).clamp(1, 20)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -154,7 +135,8 @@ class _ReservasScreenState extends State<ReservasScreen> {
             ),
             _CounterButton(
               icon: Icons.add,
-              onTap: () => setState(() => personas = (personas + 1).clamp(1, 20)),
+              onTap: () =>
+                  setState(() => personas = (personas + 1).clamp(1, 20)),
             ),
           ],
         ),
@@ -168,7 +150,7 @@ class _ReservasScreenState extends State<ReservasScreen> {
     return Column(
       key: const ValueKey(2),
       children: [
-        const _StepTitle('Selecciona la fecha'),
+        const _StepTitle('SELECCIONA LA FECHA'),
         OutlinedButton.icon(
           onPressed: () async {
             final picked = await showDatePicker(
@@ -182,12 +164,15 @@ class _ReservasScreenState extends State<ReservasScreen> {
           icon: const Icon(Icons.calendar_month),
           label: Text(
             fecha == null
-                ? 'Elegir fecha'
+                ? 'DD/MM/AAAA'
                 : '${fecha!.day}/${fecha!.month}/${fecha!.year}',
           ),
         ),
         const SizedBox(height: 26),
-        _primaryButton('Continuar', fecha == null ? null : () => setState(() => step = 3)),
+        _primaryButton(
+          'Continuar',
+          fecha == null ? null : () => setState(() => step = 3),
+        ),
       ],
     );
   }
@@ -196,23 +181,36 @@ class _ReservasScreenState extends State<ReservasScreen> {
     return Column(
       key: const ValueKey(3),
       children: [
-        const _StepTitle('Selecciona el horario'),
+        const _StepTitle('SELECCIONA EL HORARIO'),
         Wrap(
           spacing: 10,
           runSpacing: 10,
           alignment: WrapAlignment.center,
           children: horas.map((value) {
             final selected = value == hora;
-            return ChoiceChip(
-              label: Text(value),
-              selected: selected,
-              selectedColor: const Color(0xFFF1C40F),
-              onSelected: (_) => setState(() => hora = value),
+            return SizedBox(
+              width: 134,
+              child: OutlinedButton(
+                onPressed: () => setState(() => hora = value),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: selected
+                      ? Colors.black
+                      : PesqueraStyle.yellow,
+                  backgroundColor: selected
+                      ? PesqueraStyle.yellow
+                      : Colors.transparent,
+                  side: const BorderSide(color: PesqueraStyle.yellow),
+                ),
+                child: Text(value),
+              ),
             );
           }).toList(),
         ),
         const SizedBox(height: 26),
-        _primaryButton('Continuar', hora == null ? null : () => setState(() => step = 4)),
+        _primaryButton(
+          'Continuar',
+          hora == null ? null : () => setState(() => step = 4),
+        ),
       ],
     );
   }
@@ -221,18 +219,22 @@ class _ReservasScreenState extends State<ReservasScreen> {
     return Column(
       key: const ValueKey(4),
       children: [
-        const _StepTitle('Datos de contacto'),
+        const _StepTitle('DATOS DE CONTACTO'),
         _input(nombre, 'Nombre completo', Icons.person_outline),
         const SizedBox(height: 13),
-        _input(telefono, 'Telefono', Icons.phone_outlined,
-            keyboardType: TextInputType.phone),
+        _input(
+          telefono,
+          'Telefono',
+          Icons.phone_outlined,
+          keyboardType: TextInputType.phone,
+        ),
         const SizedBox(height: 13),
         _input(observaciones, 'Observaciones', Icons.notes_outlined, lines: 3),
         const SizedBox(height: 22),
         _primaryButton(
           guardando ? 'Guardando...' : 'Confirmar Reserva',
           guardando ? null : _guardarReserva,
-          blue: true,
+          blue: false,
         ),
       ],
     );
@@ -240,7 +242,12 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
   Future<void> _guardarReserva() async {
     if (nombre.text.trim().isEmpty || telefono.text.trim().isEmpty) {
-      mostrarNotificacion(context, titulo: 'Datos incompletos', mensaje: 'Completa nombre y telefono.', exito: false);
+      mostrarNotificacion(
+        context,
+        titulo: 'Datos incompletos',
+        mensaje: 'Completa nombre y telefono.',
+        exito: false,
+      );
       return;
     }
 
@@ -258,7 +265,16 @@ class _ReservasScreenState extends State<ReservasScreen> {
 
     if (!mounted) return;
 
-    await mostrarNotificacion(context, titulo: respuesta['success'] == true ? 'Reserva realizada' : 'No se pudo reservar', mensaje: respuesta['success'] == true ? 'Tu reserva fue confirmada correctamente.' : respuesta['mensaje'].toString(), exito: respuesta['success'] == true);
+    await mostrarNotificacion(
+      context,
+      titulo: respuesta['success'] == true
+          ? 'Reserva realizada'
+          : 'No se pudo reservar',
+      mensaje: respuesta['success'] == true
+          ? 'Tu reserva fue confirmada correctamente.'
+          : respuesta['mensaje'].toString(),
+      exito: respuesta['success'] == true,
+    );
 
     if (respuesta['success'] == true) {
       setState(() {
@@ -295,19 +311,21 @@ class _ReservasScreenState extends State<ReservasScreen> {
     );
   }
 
-  Widget _primaryButton(String text, VoidCallback? onPressed, {bool blue = false}) {
+  Widget _primaryButton(
+    String text,
+    VoidCallback? onPressed, {
+    bool blue = false,
+  }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: blue ? const Color(0xFF0A3D62) : const Color(0xFFF1C40F),
-          foregroundColor: blue ? Colors.white : const Color(0xFF2C3E50),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.black,
+          elevation: 0,
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontWeight: FontWeight.w900),
-        ),
+        child: Text(text, style: const TextStyle(fontWeight: FontWeight.w900)),
       ),
     );
   }
@@ -343,13 +361,13 @@ class _CounterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton.filled(
+    return IconButton(
       onPressed: onTap,
       icon: Icon(icon),
       style: IconButton.styleFrom(
-        backgroundColor: const Color(0xFF0A3D62),
-        foregroundColor: Colors.white,
-        fixedSize: const Size(48, 48),
+        foregroundColor: PesqueraStyle.ink,
+        fixedSize: const Size(28, 28),
+        iconSize: 15,
       ),
     );
   }

@@ -32,12 +32,33 @@ class WaveBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: CustomPaint(
-        painter: _WavePainter(),
-        child: child,
-      ),
+      child: CustomPaint(painter: _WavePainter(), child: child),
     );
   }
+}
+
+class _WavePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawColor(PesqueraStyle.softBlue, BlendMode.srcOver);
+    final paint = Paint()
+      ..color = const Color(0x160A5B87)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    const gap = 24.0;
+    const amplitude = 3.2;
+    const wavelength = 34.0;
+    for (double y = 12; y < size.height; y += gap) {
+      final path = Path()..moveTo(0, y);
+      for (double x = 0; x <= size.width; x += 2) {
+        path.lineTo(x, y + math.sin(x / wavelength * math.pi * 2) * amplitude);
+      }
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 Future<void> mostrarNotificacion(
@@ -64,28 +85,4 @@ Future<void> mostrarNotificacion(
       actions: [ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('ENTENDIDO'))],
     ),
   );
-}
-
-class _WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawColor(PesqueraStyle.softBlue, BlendMode.srcOver);
-    final paint = Paint()
-      ..color = const Color(0x160A5B87)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    const gap = 24.0;
-    const amplitude = 3.2;
-    const wavelength = 34.0;
-    for (double y = 12; y < size.height; y += gap) {
-      final path = Path()..moveTo(0, y);
-      for (double x = 0; x <= size.width; x += 2) {
-        path.lineTo(x, y + math.sin(x / wavelength * math.pi * 2) * amplitude);
-      }
-      canvas.drawPath(path, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

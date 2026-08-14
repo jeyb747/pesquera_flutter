@@ -85,4 +85,8 @@ class AuthService {
       'password': password,
     });
   }
+
+  static Future<Map<String, dynamic>> solicitarRecuperacion(String correo) {
+    return _post('password_recovery.php', {'correo': correo});
+  }
 }

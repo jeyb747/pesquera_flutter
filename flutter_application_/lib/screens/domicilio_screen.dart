@@ -22,108 +22,129 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
   @override
   Widget build(BuildContext context) {
     return PesqueraScaffold(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 46),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: Card(
-                    elevation: 0,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(34),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Confirmar Domicilio',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: PesqueraStyle.ink,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 7),
-                          const Text(
-                            'Finaliza tu pedido y recibe lo mejor del mar',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF2C3E50),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: 72,
-                            height: 4,
-                            color: const Color(0xFFF1C40F),
-                          ),
-                          const SizedBox(height: 24),
-                          _summary(),
-                          const SizedBox(height: 22),
-                          _cartProducts(),
-                          const SizedBox(height: 20),
-                          _input(nombre, 'Nombre completo', Icons.person),
-                          const SizedBox(height: 13),
-                          _input(direccion, 'Direccion de entrega', Icons.place),
-                          const SizedBox(height: 13),
-                          _input(telefono, 'Telefono celular', Icons.phone,
-                              keyboardType: TextInputType.phone),
-                          const SizedBox(height: 13),
-                          DropdownButtonFormField<String>(
-                            initialValue: pago,
-                            decoration: InputDecoration(
-                              labelText: 'Metodo de pago',
-                              prefixIcon: const Icon(Icons.credit_card),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 46,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 500),
+                    child: Card(
+                      elevation: 0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(38, 34, 38, 38),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Confirmar Domicilio',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: PesqueraStyle.ink,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'efectivo',
-                                child: Text('Efectivo al recibir'),
+                            const SizedBox(height: 7),
+                            const Text(
+                              'Finaliza tu pedido y recibe lo mejor del mar',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xFF2C3E50),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
                               ),
-                              DropdownMenuItem(
-                                value: 'nequi',
-                                child: Text('Transferencia Nequi'),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              width: 72,
+                              height: 4,
+                              color: const Color(0xFFF1C40F),
+                            ),
+                            const SizedBox(height: 24),
+                            _summary(),
+                            const SizedBox(height: 18),
+                            _cartProducts(),
+                            if (Carrito.items.isNotEmpty) ...[
+                              const SizedBox(height: 20),
+                              _input(nombre, 'Nombre completo', Icons.person),
+                              const SizedBox(height: 13),
+                              _input(
+                                direccion,
+                                'Dirección de entrega',
+                                Icons.place,
+                              ),
+                              const SizedBox(height: 13),
+                              _input(
+                                telefono,
+                                'Teléfono celular',
+                                Icons.phone,
+                                keyboardType: TextInputType.phone,
+                              ),
+                              const SizedBox(height: 13),
+                              DropdownButtonFormField<String>(
+                                initialValue: pago,
+                                decoration: InputDecoration(
+                                  labelText: 'Método de pago',
+                                  prefixIcon: const Icon(Icons.credit_card),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                ),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'efectivo',
+                                    child: Text('Efectivo al recibir'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'nequi',
+                                    child: Text('Transferencia Nequi'),
+                                  ),
+                                ],
+                                onChanged: (value) =>
+                                    setState(() => pago = value),
+                              ),
+                              const SizedBox(height: 13),
+                              _input(
+                                observaciones,
+                                'Indicaciones o notas adicionales',
+                                Icons.notes,
+                                lines: 3,
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: guardando
+                                      ? null
+                                      : _guardarDomicilio,
+                                  child: const Text(
+                                    'Confirmar Pedido',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
-                            onChanged: (value) => setState(() => pago = value),
-                          ),
-                          const SizedBox(height: 13),
-                          _input(
-                            observaciones,
-                            'Indicaciones o notas adicionales',
-                            Icons.notes,
-                            lines: 3,
-                          ),
-                          const SizedBox(height: 22),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: guardando ? null : _guardarDomicilio,
-                              child: const Text(
-                                'Confirmar Pedido',
-                                style: TextStyle(fontWeight: FontWeight.w900),
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -134,7 +155,12 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
         direccion.text.trim().isEmpty ||
         telefono.text.trim().isEmpty ||
         pago == null) {
-      mostrarNotificacion(context, titulo: 'Datos incompletos', mensaje: 'Completa todos los datos del domicilio.', exito: false);
+      mostrarNotificacion(
+        context,
+        titulo: 'Datos incompletos',
+        mensaje: 'Completa todos los datos del domicilio.',
+        exito: false,
+      );
       return;
     }
 
@@ -152,7 +178,16 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
 
     if (!mounted) return;
 
-    await mostrarNotificacion(context, titulo: respuesta['success'] == true ? 'Pedido realizado' : 'No se pudo confirmar', mensaje: respuesta['success'] == true ? 'Tu pedido fue confirmado correctamente.' : respuesta['mensaje'].toString(), exito: respuesta['success'] == true);
+    await mostrarNotificacion(
+      context,
+      titulo: respuesta['success'] == true
+          ? 'Pedido realizado'
+          : 'No se pudo confirmar',
+      mensaje: respuesta['success'] == true
+          ? 'Tu pedido fue confirmado correctamente.'
+          : respuesta['mensaje'].toString(),
+      exito: respuesta['success'] == true,
+    );
 
     if (respuesta['success'] == true) {
       setState(() {
@@ -171,7 +206,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFFF7F9FB),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(7),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Row(
@@ -196,10 +231,17 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
 
   Widget _cartProducts() {
     if (Carrito.items.isEmpty) {
-      return const Text(
-        'No hay productos en el carrito.',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black54),
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFD7E5ED)),
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: const Text(
+          'NO TIENES PRODUCTOS EN EL CARRITO.',
+          style: TextStyle(fontSize: 12, color: PesqueraStyle.ink),
+        ),
       );
     }
 
@@ -238,7 +280,7 @@ class _DomicilioScreenState extends State<DomicilioScreen> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
       ),
     );
   }

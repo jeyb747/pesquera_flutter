@@ -52,11 +52,47 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 28),
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              ElevatedButton(onPressed: () async { if (!SessionService.estaLogueado) { await pedirInicioSesion(context); return; } if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ReservasScreen())); }, child: const Text('RESERVA')),
-                              const SizedBox(width: 12),
-                              ElevatedButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MenuScreen())), child: const Text('MENÚ')),
-                            ]),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  height: 42,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      if (!SessionService.estaLogueado) {
+                                        await pedirInicioSesion(context);
+                                        return;
+                                      }
+                                      if (context.mounted) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                const ReservasScreen(),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: const Text('RESERVA'),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                SizedBox(
+                                  width: 120,
+                                  height: 42,
+                                  child: ElevatedButton(
+                                    onPressed: () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const MenuScreen(),
+                                      ),
+                                    ),
+                                    child: const Text('MENÚ'),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -66,36 +102,39 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Container(
-              color: Colors.white,
+              color: Colors.transparent,
               width: double.infinity,
               child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 62),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 820),
-                child: const Column(
-                  children: [
-                    Text(
-                      'Sobre Nosotros',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: PesqueraStyle.ink,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 18),
-                    Text(
-                      'En La Pesquera ofrecemos los sabores más frescos del mar, preparados con recetas tradicionales y un toque moderno. Ven a disfrutar una experiencia única.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF6C757D),
-                        fontSize: 18,
-                        height: 1.55,
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 70,
                 ),
-              ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 820),
+                  child: const Column(
+                    children: [
+                      Text(
+                        'Sobre Nosotros',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: PesqueraStyle.ink,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 18),
+                      Text(
+                        'En La Pesquera ofrecemos los sabores más frescos del mar, preparados con recetas tradicionales y un toque moderno. Ven a disfrutar una experiencia única.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF6C757D),
+                          fontSize: 18,
+                          height: 1.55,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],

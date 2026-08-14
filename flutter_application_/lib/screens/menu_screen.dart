@@ -37,100 +37,119 @@ class _MenuScreenState extends State<MenuScreen> {
           }
 
           final lista = (snapshot.data ?? []).where((producto) {
-            return producto.nombre
-                .toLowerCase()
-                .contains(busqueda.toLowerCase().trim());
+            return producto.nombre.toLowerCase().contains(
+              busqueda.toLowerCase().trim(),
+            );
           }).toList();
 
           return SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 34),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 34,
+                  ),
                   child: Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1100),
+                      constraints: const BoxConstraints(maxWidth: 864),
                       child: Column(
-                      children: [
-                        const Text(
-                          'Nuestro Menu',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xFF0A3D62),
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Del mar a tu mesa: descubre los mejores sabores de La Pesquera.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xFF2C3E50),
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 970),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Busca un plato, ingrediente o categoría',
-                              prefixIcon: const Icon(Icons.search),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade300),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFF1C40F),
-                                  width: 2,
+                        children: [
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 864),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Escribe el inicio del nombre del plato',
+                                hintStyle: const TextStyle(fontSize: 11),
+                                isDense: true,
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                  borderSide: const BorderSide(
+                                    color: PesqueraStyle.yellow,
+                                    width: 2,
+                                  ),
                                 ),
                               ),
+                              onChanged: (value) =>
+                                  setState(() => busqueda = value),
                             ),
-                            onChanged: (value) =>
-                                setState(() => busqueda = value),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        _Category(
-                          title: 'Pescados y Carnes',
-                          products: lista
-                              .where((p) =>
-                                  p.categoria.toLowerCase() ==
-                                  'pescados y carnes')
-                              .toList(),
-                          onAdd: (producto) { _add(producto); },
-                        ),
-                        _Category(
-                          title: 'Sopas',
-                          products: lista
-                              .where(
-                                  (p) => p.categoria.toLowerCase() == 'sopas')
-                              .toList(),
-                          onAdd: (producto) { _add(producto); },
-                        ),
-                        _Category(
-                          title: 'Porciones',
-                          products: lista
-                              .where((p) =>
-                                  p.categoria.toLowerCase() == 'porcion')
-                              .toList(),
-                          onAdd: (producto) { _add(producto); },
-                        ),
-                        _Category(
-                          title: 'Bebidas',
-                          products: lista
-                              .where(
-                                  (p) => p.categoria.toLowerCase() == 'bebida')
-                              .toList(),
-                          onAdd: (producto) { _add(producto); },
-                        ),
-                      ],
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Nuestro Menú',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF0A3D62),
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Del mar a tu mesa: descubre los mejores sabores de La Pesquera.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF2C3E50),
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          _Category(
+                            title: 'Pescados y Carnes',
+                            products: lista
+                                .where(
+                                  (p) =>
+                                      p.categoria.toLowerCase() ==
+                                      'pescados y carnes',
+                                )
+                                .toList(),
+                            onAdd: (producto) {
+                              _add(producto);
+                            },
+                          ),
+                          _Category(
+                            title: 'Sopas',
+                            products: lista
+                                .where(
+                                  (p) => p.categoria.toLowerCase() == 'sopas',
+                                )
+                                .toList(),
+                            onAdd: (producto) {
+                              _add(producto);
+                            },
+                          ),
+                          _Category(
+                            title: 'Porciones',
+                            products: lista
+                                .where(
+                                  (p) => p.categoria.toLowerCase() == 'porcion',
+                                )
+                                .toList(),
+                            onAdd: (producto) {
+                              _add(producto);
+                            },
+                          ),
+                          _Category(
+                            title: 'Bebidas',
+                            products: lista
+                                .where(
+                                  (p) => p.categoria.toLowerCase() == 'bebida',
+                                )
+                                .toList(),
+                            onAdd: (producto) {
+                              _add(producto);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -147,7 +166,11 @@ class _MenuScreenState extends State<MenuScreen> {
     if (!await pedirInicioSesion(context)) return;
     Carrito.agregar(producto);
     if (!mounted) return;
-    await mostrarNotificacion(context, titulo: 'Producto agregado', mensaje: '${producto.nombre} fue agregado al carrito.');
+    await mostrarNotificacion(
+      context,
+      titulo: 'Producto agregado',
+      mensaje: '${producto.nombre} fue agregado al carrito.',
+    );
     setState(() {});
   }
 }
@@ -169,40 +192,52 @@ class _Category extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 34),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-      ),
+      margin: const EdgeInsets.only(top: 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 12),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
             decoration: const BoxDecoration(
+              color: PesqueraStyle.navy,
               border: Border(
                 left: BorderSide(color: Color(0xFFF1C40F), width: 5),
               ),
             ),
             child: Text(
-              '🐟  $title',
+              title.toUpperCase(),
               style: const TextStyle(
-                color: PesqueraStyle.ink,
-                fontSize: 26,
+                color: Colors.white,
+                fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          LayoutBuilder(builder: (context, constraints) {
-            final columns = constraints.maxWidth >= 900 ? 4 : constraints.maxWidth >= 600 ? 2 : 1;
-            final width = (constraints.maxWidth - (columns - 1) * 18) / columns;
-            return Wrap(
-              spacing: 18,
-              runSpacing: 18,
-              children: products.map((producto) => SizedBox(width: width, child: _ProductTile(producto: producto, onAdd: onAdd))).toList(),
-            );
-          }),
+          const SizedBox(height: 14),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 700
+                  ? 4
+                  : constraints.maxWidth >= 420
+                  ? 2
+                  : 1;
+              final width =
+                  (constraints.maxWidth - (columns - 1) * 16) / columns;
+              return Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: products
+                    .map(
+                      (producto) => SizedBox(
+                        width: width,
+                        child: _ProductTile(producto: producto, onAdd: onAdd),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -352,31 +387,84 @@ class _ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 294,
+      height: 260,
       decoration: PesqueraStyle.cardDecoration,
       clipBehavior: Clip.antiAlias,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: Image.asset(
-            'assets/images/${producto.imagen}',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 160,
             width: double.infinity,
-            fit: BoxFit.cover,
-            errorBuilder: (_, _, _) => Container(
-              color: const Color(0xFFEAF1F5),
-              child: const Center(
-                child: Icon(Icons.set_meal, color: PesqueraStyle.navy),
+            child: Image.asset(
+              'assets/images/${producto.imagen}',
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => Container(
+                color: const Color(0xFFEAF1F5),
+                child: const Center(
+                  child: Icon(Icons.set_meal, color: PesqueraStyle.navy),
+                ),
               ),
             ),
           ),
-        ),
-        Padding(padding: const EdgeInsets.fromLTRB(15, 13, 15, 14), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(producto.nombre.toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: PesqueraStyle.ink, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 7),
-          Text(producto.descripcion.isEmpty ? 'Preparación especial de la casa' : producto.descripcion, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.black45, fontSize: 12)),
-          const SizedBox(height: 10),
-          Row(children: [Text('\$${producto.precio}', style: const TextStyle(color: PesqueraStyle.yellow, fontWeight: FontWeight.w800, fontSize: 16)), const Spacer(), InkWell(onTap: () => onAdd(producto), borderRadius: BorderRadius.circular(20), child: const CircleAvatar(radius: 16, backgroundColor: PesqueraStyle.yellow, child: Icon(Icons.add, size: 18, color: PesqueraStyle.ink)))])
-        ]))
-      ]),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    producto.nombre.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: PesqueraStyle.ink,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    producto.descripcion.isEmpty
+                        ? 'Preparación especial de la casa'
+                        : producto.descripcion,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black45, fontSize: 12),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        '\$${producto.precio}',
+                        style: const TextStyle(
+                          color: PesqueraStyle.yellow,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () => onAdd(producto),
+                        borderRadius: BorderRadius.circular(20),
+                        child: const CircleAvatar(
+                          radius: 16,
+                          backgroundColor: PesqueraStyle.yellow,
+                          child: Icon(
+                            Icons.add,
+                            size: 18,
+                            color: PesqueraStyle.ink,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

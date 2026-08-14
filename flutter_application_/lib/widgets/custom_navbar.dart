@@ -55,9 +55,7 @@ class Navbar extends StatelessWidget {
                     child: Row(
                       children: [
                         Image.asset(
-                          isMobile
-                              ? 'assets/images/logo.png'
-                              : 'assets/images/logo_horizontal.png',
+                          isMobile ? 'assets/images/logo.png' : 'assets/images/logo_horizontal.png',
                           width: isMobile ? 50 : 126,
                           height: isMobile ? 50 : 46,
                           fit: BoxFit.contain,
